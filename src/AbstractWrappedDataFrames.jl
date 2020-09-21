@@ -38,6 +38,12 @@ dataframe(sf::AbstractWrappedDataFrame) = getfield(sf, :df)
 @forward AbstractWrappedDataFrame.df DataFrames.select!
 @forward AbstractWrappedDataFrame.df DataFrames.index
 
+@forward AbstractWrappedDataFrame.df DataFrames.DataFrameRow
+# @forward AbstractWrappedDataFrame.df DataFrames.DataFrameRows
+@forward AbstractWrappedDataFrame.df DataFrames.SubDataFrame
+# @forward AbstractWrappedDataFrame.df DataFrames.GroupedDataFrame
+# @forward AbstractWrappedDataFrame.df DataFrames.DataFrameColumns
+
 # TODO This is not ideal because I would rather return only the properties
 # of the underlying data frame. But if I don't support getting the object's
 # own properties then I run into other problems with the `parent` function.
@@ -103,8 +109,14 @@ function DataFrames.manipulate(sf::AbstractWrappedDataFrame, args...; kwargs...)
 end
 
 # required for groupby
-function DataFrames.SubDataFrame(sf::AbstractWrappedDataFrame, args...; kwargs...)
-    return DataFrames.SubDataFrame(dataframe(sf), args...; kwargs...)
-end
+# function DataFrames.SubDataFrame(sf::AbstractWrappedDataFrame, args...; kwargs...)
+#     return DataFrames.SubDataFrame(dataframe(sf), args...; kwargs...)
+# end
+
+# required for `wdf[1, Between(:x, :y)] .= 4`
+# function DataFrames.DataFrameRow(sf::AbstractWrappedDataFrame, args...; kwargs...)
+#     return DataFrames.DataFrameRow(dataframe(sf), args...; kwargs...)
+# end
+
 
 end
