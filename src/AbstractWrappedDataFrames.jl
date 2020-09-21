@@ -85,6 +85,22 @@ function Base.convert(::Type{S}, sf::S) where {S <: AbstractWrappedDataFrame}
     return sf
 end
 
+# required by row indexing to return DataFrameRow
+#=
+julia> wdf[1, :]
+ERROR: MethodError: getindex(::WDF, ::Int64, ::Colon) is ambiguous. Candidates:
+  getindex(df::AbstractDataFrame, rowind::Integer, ::Colon) in DataFrames at /Users/tomkwong/.julia/packages/DataFrames/cdZCk/src/dataframerow/dataframerow.jl:128
+  getindex(x::AbstractWrappedDataFrame, args...; kwargs...) in AbstractWrappedDataFrames at /Users/tomkwong/.julia/packages/Lazy/9Xnd3/src/macros.jl:297
+  getindex(df::AbstractDataFrame, rowind::Integer, colinds::Union{Colon, Regex, AbstractArray{T,1} where T, All, Between, InvertedIndex}) in DataFrames at /Users/tomkwong/.julia/packages/DataFrames/cdZCk/src/dataframerow/dataframerow.jl:126
+Possible fix, define
+  getindex(::AbstractWrappedDataFrame, ::Integer, ::Colon)
+=#
+for v in [Colon, DataFrames.MultiColumnIndex]
+    @eval function Base.getindex(s::AbstractWrappedDataFrame, i::Integer, arg::$v)
+        return dataframe(s)[i, arg]
+    end
+end
+
 # Custom extensions as these functions do not take AbstractDataFrame
 
 using DataFrames: RowGroupDict, MultiColumnIndex
