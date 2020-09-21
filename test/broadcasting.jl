@@ -10,6 +10,8 @@ struct WDF <: AbstractWrappedDataFrame
 end
 # ---------------------------------------------------------------------------
 
+const ≅ = isequal
+
 refdf = WDF(DataFrame(reshape(1.5:15.5, (3,5))))
 
 @testset "CartesianIndex" begin

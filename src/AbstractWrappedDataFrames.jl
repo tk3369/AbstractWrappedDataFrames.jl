@@ -137,6 +137,6 @@ end
 # Fixes for the comprehensive tests below.
 
 # -- broadcasting.jl --
-
+Base.broadcastable(x::AbstractWrappedDataFrame) = dataframe(x)
 
 end
