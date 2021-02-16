@@ -134,5 +134,9 @@ end
 #     return DataFrames.DataFrameRow(dataframe(sf), args...; kwargs...)
 # end
 
+# Fixes for the comprehensive tests below.
+
+# -- broadcasting.jl --
+Base.broadcastable(x::AbstractWrappedDataFrame) = dataframe(x)
 
 end
